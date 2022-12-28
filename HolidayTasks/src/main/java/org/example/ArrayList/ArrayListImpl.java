@@ -9,6 +9,11 @@ public class ArrayListImpl {
         count = 0;
     }
 
+    public ArrayListImpl(int size){
+        values = new int[size];
+        count = 0;
+    }
+    // Complexity is always O(n) even when ensureCapacity is called since there are no nested loops
     public void add(int value){
         if(count + 1 > values.length){
             ensureCapacity();
@@ -16,14 +21,59 @@ public class ArrayListImpl {
         values[count++] = value;
     }
 
+    // Best case scenario, when the index is greater than the last index in the list since an exception
+    // is only thrown or when the index is equal to the last index in the list since only 1 element
+    // needs to be rearranged, complexity is O(1)
+    // Worst case scenario, when the index is equals to 0 since all elements need to be rearranged
+    // complexity is O(n)
+    // ensureCapacity does not affect performance since there are no nested loops
     public void addToIndex(int index, int value){
-        for(int i = index; i < count; i++){
-            values[i + 1] = values[i];
+        if(index > count - 1){
+            throw new IndexOutOfBoundsException();
         }
+
+        if(count + 1> values.length){
+            ensureCapacity();
+        }
+
+        for(int i = count; i > index; i--){
+            values[i] = values[i - 1];
+        }
+        values[index] = value;
+        count++;
+    }
+
+    // Best case scenario, when the index is greater than the last index in the list since an exception
+    // is only thrown or when the index is equal to the last index in the list since only 1 element
+    // needs to be rearranged, complexity is O(1)
+    // Worst case scenario, when the index is equals to 0 since all elements need to be rearranged
+    // complexity is O(n)
+    public void deleteAtIndex(int index){
+        if(index > count - 1){
+            throw new IndexOutOfBoundsException();
+        }
+
+        for(int i = index; i < count - 1; i++){
+            values[i] = values[i + 1];
+        }
+        values[count - 1] = 0;
+        count--;
+    }
+    // Complexity is always O(1)
+    public int getAtIndex(int index){
+        if(index > count - 1){
+            throw new IndexOutOfBoundsException();
+        }
+
+        return values[index];
     }
 
     public int getCount(){
         return count;
+    }
+
+    public int getArrayLength(){
+        return values.length;
     }
 
     public void print(){
